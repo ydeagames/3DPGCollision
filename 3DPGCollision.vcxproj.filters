@@ -32,6 +32,8 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="CollisionObject.h" />
     <ClInclude Include="Collision.h" />
+    <ClInclude Include="Input.h" />
+    <ClInclude Include="picojson.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp" />
@@ -50,6 +52,7 @@
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="CollisionObject.cpp" />
     <ClCompile Include="Collision.cpp" />
+    <ClCompile Include="Input.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />
@@ -63,5 +66,8 @@
     <Manifest Include="settings.manifest">
       <Filter>Assets</Filter>
     </Manifest>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="object.json" />
   </ItemGroup>
 </Project>

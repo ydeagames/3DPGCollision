@@ -7,10 +7,8 @@ class MyGame
 {
 private:
 	// オブジェクト関連
-	std::unique_ptr<CollisionObject>	m_pObject1;			// オブジェクト１
-	std::unique_ptr<CollisionObject>	m_pObject2;			// オブジェクト２
-	std::unique_ptr<CollisionObject>	m_pObjectField;		// オブジェクトフィールド
-	std::vector<std::unique_ptr<CollisionObject>> m_particles; // パーティクル
+	std::vector<std::unique_ptr<CollisionObject>> m_objects;	// オブジェクト
+	std::vector<std::unique_ptr<CollisionObject>> m_particles;	// パーティクル
 
 public:
 	// 生成

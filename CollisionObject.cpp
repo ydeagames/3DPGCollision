@@ -12,19 +12,19 @@ void CollisionObject::Initialize(GameContext & context)
 {
 	// オブジェクト作成
 	if (!s_pObject)
-		s_pObject = GeometricPrimitive::CreateCube(context.GetDR().GetD3DDeviceContext());
+		s_pObject = GeometricPrimitive::CreateSphere(context.GetDR().GetD3DDeviceContext());
 }
 
 void CollisionObject::Update(GameContext & context)
 {
 	// オブジェクトの物理
 	m_objectVel += m_objectAcc;
-	m_objectVel *= .98f;
+	//m_objectVel *= .98f;
 	m_objectPos += m_objectVel;
 	// オブジェクトの更新
 	m_objectMatrix = Matrix::CreateScale(m_objectSize) * Matrix::CreateTranslation(m_objectPos);
 	// オブジェクトの当たり判定
-	m_objectCollider = BoundingBox(m_objectPos, m_objectSize * .5f);
+	m_objectCollider = BoundingSphere(m_objectPos, std::max({ m_objectSize.x, m_objectSize.y, m_objectSize.z }) *.5f);
 }
 
 void CollisionObject::Render(GameContext & context, const DirectX::SimpleMath::Vector4& color)
