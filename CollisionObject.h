@@ -14,8 +14,9 @@ public:
 	DirectX::SimpleMath::Vector3					m_objectVel;		// オブジェクトの速度
 	DirectX::SimpleMath::Vector3					m_objectAcc;		// オブジェクトの加速度
 	DirectX::SimpleMath::Vector4					m_objectColor;		// オブジェクトの色
-	DirectX::BoundingBox							m_objectCollider;	// オブジェクトの当たり判定
+	DirectX::BoundingSphere							m_objectCollider;	// オブジェクトの当たり判定
 	bool											m_objectWireframe;	// オブジェクトがワイヤーフレームか
+	float											m_objectWeight;		// オブジェクトの重さ
 
 public:
 	// 生成

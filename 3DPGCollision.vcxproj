@@ -173,8 +173,10 @@
     <ClInclude Include="GameCamera.h" />
     <ClInclude Include="GameContext.h" />
     <ClInclude Include="GridFloor.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="MyGame.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="picojson.h" />
     <ClInclude Include="StepTimer.h" />
   </ItemGroup>
   <ItemGroup>
@@ -185,6 +187,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="GameCamera.cpp" />
     <ClCompile Include="GridFloor.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MyGame.cpp" />
     <ClCompile Include="pch.cpp">
@@ -202,6 +205,9 @@
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="settings.manifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="object.json" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
