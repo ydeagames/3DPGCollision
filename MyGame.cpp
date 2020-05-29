@@ -11,17 +11,42 @@
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-void MyGame::Initialize(GameContext & context)
+void MyGame::Initialize(GameContext & ctx)
 {
 	// オブジェクトの処理
 	auto object = std::make_unique<CollisionObject>();
-	object->Initialize(context);
+	object->Initialize(ctx);
 	object->m_objectPos = Vector3::Zero;
 	object->m_objectColor = Colors::White;
 	object->m_objectVel = Vector3::Zero;
 	object->m_objectSize = Vector3::One;
 	object->m_objectWeight = 1;
 	m_objects.emplace_back(std::move(object));
+
+	auto device = ctx.GetDR().GetD3DDevice();
+	auto context = ctx.GetDR().GetD3DDeviceContext();
+
+	// テクスチャ
+	DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"Resources/bricks/bricks_Diffuse.png", nullptr, m_textureDiffuse.GetAddressOf()));
+	DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"Resources/bricks/bricks_Normal.png", nullptr, m_textureNormal.GetAddressOf()));
+	DX::ThrowIfFailed(CreateWICTextureFromFile(device, L"Resources/bricks/bricks_Roughness.png", nullptr, m_textureRoughness.GetAddressOf()));
+
+	// エフェクトの生成
+	m_basicEffect = std::make_unique<DirectX::PBREffect>(device);
+	// 頂点カラー(有効)
+	// m_basicEffect->SetTextureEnabled(true);
+	// プリミティブオブジェクト生成
+	std::vector<GeometricPrimitive::VertexType> vertices = {
+		{ Vector3(-0.5f, +0.5f, 0.0f), Vector3::Forward, Vector2(0.0f, 0.0f) },
+		{ Vector3(+0.5f, +0.5f, 0.0f), Vector3::Forward, Vector2(1.0f, 0.0f) },
+		{ Vector3(+0.5f, -0.5f, 0.0f), Vector3::Forward, Vector2(1.0f, 1.0f) },
+		{ Vector3(-0.5f, -0.5f, 0.0f), Vector3::Forward, Vector2(0.0f, 1.0f) },
+	};
+	std::vector<uint16_t> indices = {
+		0, 1, 2, 0, 2, 3,
+	};
+	m_plane = GeometricPrimitive::CreateCustom(context, vertices, indices);
+	m_plane->CreateInputLayout(m_basicEffect.get(), m_pInputLayout.GetAddressOf());
 }
 
 void MyGame::Update(GameContext & context)
@@ -119,6 +144,15 @@ void MyGame::Update(GameContext & context)
 			(*nearest)->m_objectVel += subNorm;
 		}
 	}
+
+	if (Input::GetMouseButton(Input::Buttons::MouseRight))
+	{
+		auto mouse = Input::GetMousePosition();
+		auto delta = lastMouse - mouse;
+		yaw -= delta.x * .01f;
+		pitch += delta.y * .01f;
+		lastMouse = mouse;
+	}
 }
 
 void MyGame::Render(GameContext & context)
@@ -126,6 +160,15 @@ void MyGame::Render(GameContext & context)
 	// オブジェクトの描画
 	for (auto& obj : m_objects)
 		obj->Render(context);
+
+	m_basicEffect->SetWorld(Matrix::CreateScale(2) * Matrix::CreateFromYawPitchRoll(yaw, pitch, 0.f));
+	m_basicEffect->SetView(context.GetCamera().view);
+	m_basicEffect->SetProjection(context.GetCamera().projection);
+
+	m_basicEffect->SetLightDiffuseColor(0, Colors::White);
+	m_basicEffect->SetLightDirection(0, Vector3::One);
+	m_basicEffect->SetSurfaceTextures(m_textureDiffuse.Get(), m_textureNormal.Get(), m_textureRoughness.Get());
+	m_plane->Draw(m_basicEffect.get(), m_pInputLayout.Get());
 }
 
 void MyGame::Finalize(GameContext & context)
